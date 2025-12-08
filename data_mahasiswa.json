@@ -1,0 +1,23 @@
+[
+    {
+        "nim": "241011400098",
+        "nama": "Rizki Ramadani",
+        "email": "rizki@example.com",
+        "jurusan": "Informatika",
+        "ipk": 3.85
+    },
+    {
+        "nim": "241011400099",
+        "nama": "Azka Insan",
+        "email": "azka@example.com",
+        "jurusan": "Sistem Informasi",
+        "ipk": 3.20
+    },
+    {
+        "nim": "241011400097",
+        "nama": "Zeryl",
+        "email": "zeryz@example.com",
+        "jurusan": "Teknik Elektro",
+        "ipk": 3.90
+    }
+]
