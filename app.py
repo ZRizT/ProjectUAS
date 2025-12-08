@@ -5,11 +5,7 @@ import time
 import os
 from abc import ABC, abstractmethod
 
-# ==========================================
 # 1. KONSEP OOP (Encapsulation, Inheritance, Polymorphism)
-# ==========================================
-
-# Abstract Base Class
 class Person(ABC):
     def __init__(self, nama, email):
         self.nama = nama
@@ -50,7 +46,7 @@ class Student(Person):
             "IPK": self.__ipk
         }
     
-    # Method untuk konversi ke Dictionary (untuk JSON)
+    # Method untuk convert ke Dict (JSON)
     def to_dict(self):
         return {
             "nim": self.__nim,
@@ -60,10 +56,7 @@ class Student(Person):
             "ipk": self.__ipk
         }
 
-# ==========================================
 # 2. MANAJEMEN DATA & FILE I/O
-# ==========================================
-
 class StudentManager:
     def __init__(self, filename="data_mahasiswa.json"):
         self.filename = filename
@@ -121,9 +114,7 @@ class StudentManager:
     def get_all_data(self):
         return [s.to_dict() for s in self.students]
 
-# ==========================================
 # 3. ALGORITMA SEARCHING & SORTING
-# ==========================================
 
 class Algorithms:
     
@@ -214,15 +205,13 @@ class Algorithms:
         result.extend(right[j:])
         return result
 
-# ==========================================
 # 4. GUI & VALIDASI (STREAMLIT)
-# ==========================================
 
 def main():
     st.set_page_config(page_title="Sistem Data Mahasiswa", page_icon="🎓")
     
     st.title("🎓 Manajemen Data Mahasiswa")
-    st.markdown("Created by **Zeryz** | Algoritma & Pemrograman Project")
+    st.markdown("Created by Rizki Ramadani | 241011400098 | Algoritma & Pemrograman Project")
 
     # Inisialisasi Manager
     if 'manager' not in st.session_state:
@@ -264,7 +253,7 @@ def main():
             nim = st.text_input("NIM (Nomor Induk)")
             nama = st.text_input("Nama Lengkap")
             email = st.text_input("Email")
-            jurusan = st.selectbox("Jurusan", ["Informatika", "Sistem Informasi", "DKV", "Teknik Elektro"])
+            jurusan = st.selectbox("Jurusan", ["Informatika", "Sistem Informasi", "Teknik Mesin", "Teknik Elektro"])
             ipk = st.number_input("IPK", min_value=0.0, max_value=4.0, step=0.01)
             
             submitted = st.form_submit_button("Simpan Data")
