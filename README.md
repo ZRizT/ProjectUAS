@@ -120,6 +120,8 @@ streamlit run main.py
 
 ---
 
+## Tampilan Aplikasi Streamlit
+
 Copyright © 2025 **Rizki Ramadani**  
 Dibuat dengan ❤️ menggunakan *Python & Streamlit*
 
