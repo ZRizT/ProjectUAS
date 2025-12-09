@@ -125,8 +125,7 @@ streamlit run main.py
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a2eaf9c1-eb0f-42fc-9d4c-bb0b152a9d68" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9c0994a7-813c-4009-8e23-381ecc89c071" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9d517131-9e1b-4523-8263-e4cff4369676" />
-![mail](https://github.com/user-attachments/assets/3813af11-5059-44ba-8a33-a8af3953bc50)
-
+<img width="445" height="641" alt="image" src="https://github.com/user-attachments/assets/72e6e130-9a0a-4e09-adea-1adc033f772a" />
 
 ---
 
