@@ -1,4 +1,7 @@
 # 🎓 Sistem Manajemen Data Mahasiswa (SMDM)
+Kunjungi [SMDM](https://projectuas-ap2-0098.streamlit.app) untuk mengakses aplikasi ini.
+
+---
 
 Proyek Tugas Akhir (UAS) - **Algoritma dan Pemrograman**  
 Dikembangkan untuk mendemonstrasikan penerapan **struktur data**, **algoritma pengurutan/pencarian**, **OOP (Object-Oriented Programming)**, dan **integrasi API sederhana**.
