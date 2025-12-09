@@ -5,9 +5,11 @@ Dikembangkan untuk mendemonstrasikan penerapan **struktur data**, **algoritma pe
 
 ---
 
-## 👨‍💻 Identitas Pengembang
+## 👨‍💻 Identitas Developer
 **Nama:** Rizki Ramadani  
-**Mata Kuliah:** Algoritma dan Pemrograman
+**NIM:** 241011400098
+**Mata Kuliah:** Algoritma dan Pemrograman 2
+
 
 ---
 
@@ -60,7 +62,6 @@ Aplikasi ini dibangun berbasis **GUI Web** menggunakan **Streamlit**, dengan fit
 
 📩 **Notifikasi Nilai** → Mengirim email personal berisi IPK  
 📂 **Rekap Data** → Mengirim backup database JSON ke admin  
-🎨 **UI Modern** → Login, Dashboard, Background Custom, Logo
 
 ---
 
@@ -109,14 +110,14 @@ streamlit run main.py
 
 | Fitur     | Algoritma      | Waktu Rata-rata | Keterangan                               |
 |-----------|----------------|-----------------|-------------------------------------------|
-| Cari Nama | Linear Search  | O(n)            | Iterasi satu per satu                    |
-| Cari NIM  | Binary Search  | O(log n)        | Sangat cepat (data harus urut)           |
-| Sort Data | Bubble Sort    | O(n²)           | Lambat, untuk edukasi                    |
-| Sort Data | Merge Sort     | O(n log n)      | Stabil & cepat (Divide & Conquer)        |
+| Cari Nama | Linear Search  | *O(n)*            | Iterasi satu per satu                    |
+| Cari NIM  | Binary Search  | *O(log n)*        | Sangat cepat (data harus urut)           |
+| Sort Data | Bubble Sort    | *O(n²)*           | Lambat, untuk edukasi                    |
+| Sort Data | Merge Sort     | *O(n log n)*      | Stabil & cepat (Divide & Conquer)        |
 
 ---
 
 Copyright © 2025 **Rizki Ramadani**  
-Dibuat dengan ❤️ menggunakan **Python & Streamlit**
+Dibuat dengan ❤️ menggunakan *Python & Streamlit*
 
 
