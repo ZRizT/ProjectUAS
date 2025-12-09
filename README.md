@@ -122,9 +122,11 @@ streamlit run main.py
 
 ## Tampilan Aplikasi Streamlit
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2ae34d6e-161c-4311-a542-44d1a399c8d4" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a2eaf9c1-eb0f-42fc-9d4c-bb0b152a9d68" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9c0994a7-813c-4009-8e23-381ecc89c071" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9d517131-9e1b-4523-8263-e4cff4369676" />
+<img width="445" height="641" alt="image" src="https://github.com/user-attachments/assets/72e6e130-9a0a-4e09-adea-1adc033f772a" />
 
 ---
 
