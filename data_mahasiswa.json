@@ -43,9 +43,16 @@
     },
     {
         "nim": "24101140006",
-        "nama": "aska",
-        "email": "awjmd@email.com",
+        "nama": "aas",
+        "email": "awas@gmail.com",
         "jurusan": "Informatika",
         "ipk": 0.0
+    },
+    {
+        "nim": "241011400010",
+        "nama": "Azka Aldric",
+        "email": "azka0087@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 3.56
     }
 ]
