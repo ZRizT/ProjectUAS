@@ -64,7 +64,7 @@ def dashboard_page():
 
     # Sidebar
     with st.sidebar:
-        utils.render_logo(logo_path="https://img.icons8.com/color/48/university.png")
+        utils.render_logo(logo_path="https://i.imgur.com/WJulW4w.png")
         st.write(f"Selamat datang, **{st.session_state.user_role.capitalize()}**")
         
         menu = st.radio("Navigasi", ["Data Mahasiswa", "Input Data", "Kirim Email", "Analisis"])

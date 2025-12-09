@@ -84,7 +84,7 @@ def set_background(image_url, is_login=False):
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-def render_logo(logo_path="https://imgur.com/gallery/logo-uBl34rq#WJulW4w"):
+def render_logo(logo_path="https://i.imgur.com/WJulW4w.png"):
     """Menampilkan logo di tengah (biasanya untuk login) atau sidebar"""
     st.markdown(
         f"""
@@ -94,3 +94,4 @@ def render_logo(logo_path="https://imgur.com/gallery/logo-uBl34rq#WJulW4w"):
         """,
         unsafe_allow_html=True
     )
+    
