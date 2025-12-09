@@ -22,9 +22,8 @@ manager = st.session_state.manager
 
 # --- FUNGSI HALAMAN LOGIN ---
 def login_page():
-    # URL Gambar Background Login (Ganti dengan file lokal atau URL kamu)
-    # Contoh pakai placeholder image
-    bg_login = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop"
+    # URL Gambar Background Login
+    bg_login = "https://i.imgur.com/hUT5YRQ.jpeg"
     utils.set_background(bg_login, is_login=True)
 
     utils.render_logo() # Logo default
@@ -58,8 +57,7 @@ def login_page():
 
 # --- FUNGSI HALAMAN DASHBOARD ---
 def dashboard_page():
-    # URL Gambar Background Dashboard (Ganti dengan assetmu)
-    bg_dash = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=50070&auto=format&fit=crop"
+    bg_dash = "https://i.imgur.com/hUT5YRQ.jpeg"
     utils.set_background(bg_dash, is_login=False)
 
     # Sidebar
@@ -112,9 +110,9 @@ def dashboard_page():
                     st.success("Data tersimpan!")
                 except Exception as e: st.error(str(e))
 
-    # 3. KIRIM EMAIL (FITUR BARU)
+    # 3. KIRIM EMAIL
     elif menu == "Kirim Email":
-        st.info("📨 Fitur Notifikasi Email")
+        st.info("Kirim Notifikasi Email")
         
         tab1, tab2 = st.tabs(["Kirim ke Satu Mahasiswa", "Kirim Rekap Database"])
         
@@ -126,10 +124,11 @@ def dashboard_page():
                 mhs = next((s for s in manager.students if s.get_nim() == target_nim), None)
                 if mhs:
                     subjek = f"Pemberitahuan IPK Semester - {mhs.nama}"
-                    isi = f"Halo {mhs.nama},\n\nBerikut adalah hasil studi Anda:\nNIM: {mhs.get_nim()}\nIPK: {mhs.get_ipk()}\n\nTetap semangat!\nAdmin Kampus."
-                    
+                    isi_html = utils.template_ipk(mhs)
+                    isi_plain = f"Halo {mhs.nama}, berikut hasil evaluasi: NIM {mhs.get_nim()}, IPK {mhs.get_ipk()}."
+       
                     with st.spinner("Mengirim email..."):
-                        if utils.send_email_notification(mhs.email, subjek, isi):
+                        if utils.send_email_notification(mhs.email, subjek, isi_html, isi_plain):
                             st.success(f"Email terkirim ke {mhs.email}")
                 else:
                     st.error("Mahasiswa tidak ditemukan.")
