@@ -9,44 +9,16 @@
     {
         "nim": "241011400099",
         "nama": "Azka Insan",
-        "email": "azka@example.com",
+        "email": "azka.insan@example.com",
         "jurusan": "Sistem Informasi",
-        "ipk": 3.2
+        "ipk": 3.20
     },
     {
         "nim": "241011400097",
-        "nama": "Zeryl",
-        "email": "zeryz@example.com",
+        "nama": "Zeryl Ardiansyah",
+        "email": "zeryl.ardi@example.com",
         "jurusan": "Teknik Elektro",
-        "ipk": 3.9
-    },
-    {
-        "nim": "241011400005",
-        "nama": "aaaaawh",
-        "email": "jefrizm30@gmail.com",
-        "jurusan": "Informatika",
-        "ipk": 0.0
-    },
-    {
-        "nim": "241011400004",
-        "nama": "aaa",
-        "email": "jefrizm30@gmail.com",
-        "jurusan": "Informatika",
-        "ipk": 0.0
-    },
-    {
-        "nim": "241011400003",
-        "nama": "asaa",
-        "email": "jefrizm30@gmail.com",
-        "jurusan": "Informatika",
-        "ipk": 0.0
-    },
-    {
-        "nim": "24101140006",
-        "nama": "aas",
-        "email": "awas@gmail.com",
-        "jurusan": "Informatika",
-        "ipk": 0.0
+        "ipk": 3.90
     },
     {
         "nim": "241011400010",
@@ -56,10 +28,115 @@
         "ipk": 3.56
     },
     {
-        "nim": "241011400002",
-        "nama": "awa",
-        "email": "awkdn@gmail.com",
+        "nim": "241011400101",
+        "nama": "Budi Santoso",
+        "email": "budi.s@example.com",
         "jurusan": "Informatika",
-        "ipk": 0.01
+        "ipk": 3.75
+    },
+    {
+        "nim": "241011400102",
+        "nama": "Siti Aminah",
+        "email": "siti.aminah@example.com",
+        "jurusan": "Sistem Informasi",
+        "ipk": 3.40
+    },
+    {
+        "nim": "241011400105",
+        "nama": "Kevin Pratama",
+        "email": "kevin.p@example.com",
+        "jurusan": "Teknik Elektro",
+        "ipk": 3.15
+    },
+    {
+        "nim": "241011400112",
+        "nama": "Annisa Putri",
+        "email": "annisa.putri@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 3.92
+    },
+    {
+        "nim": "241011400088",
+        "nama": "Dimas Anggara",
+        "email": "dimas.anggara@example.com",
+        "jurusan": "Sistem Informasi",
+        "ipk": 2.85
+    },
+    {
+        "nim": "241011400120",
+        "nama": "Fajar Nugraha",
+        "email": "fajar.nugraha@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 3.50
+    },
+    {
+        "nim": "241011400095",
+        "nama": "Citra Kirana",
+        "email": "citra.k@example.com",
+        "jurusan": "Teknik Elektro",
+        "ipk": 3.66
+    },
+    {
+        "nim": "241011400108",
+        "nama": "Eko Kurniawan",
+        "email": "eko.kur@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 3.05
+    },
+    {
+        "nim": "241011400115",
+        "nama": "Dian Sastrowardoyo",
+        "email": "dian.sastro@example.com",
+        "jurusan": "Sistem Informasi",
+        "ipk": 3.80
+    },
+    {
+        "nim": "241011400100",
+        "nama": "Gilang Ramadhan",
+        "email": "gilang.r@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 2.99
+    },
+    {
+        "nim": "241011400130",
+        "nama": "Hani Pertiwi",
+        "email": "hani.pertiwi@example.com",
+        "jurusan": "Informatika",
+        "ipk": 3.88
+    },
+    {
+        "nim": "241011400131",
+        "nama": "Indra Lesmana",
+        "email": "indra.les@example.com",
+        "jurusan": "Teknik Elektro",
+        "ipk": 3.10
+    },
+    {
+        "nim": "241011400132",
+        "nama": "Joko Susilo",
+        "email": "joko.susilo@example.com",
+        "jurusan": "Sistem Informasi",
+        "ipk": 2.75
+    },
+    {
+        "nim": "241011400133",
+        "nama": "Kartika Sari",
+        "email": "kartika.sari@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 3.95
+    },
+    {
+        "nim": "241011400134",
+        "nama": "Lukman Hakim",
+        "email": "lukman.hakim@example.com",
+        "jurusan": "Informatika",
+        "ipk": 3.25
+    },
+    {
+        "nim": "241011400135",
+        "nama": "Maya Wulandari",
+        "email": "maya.wulan@example.com",
+        "jurusan": "Sistem Informasi",
+        "ipk": 3.60
     }
 ]
