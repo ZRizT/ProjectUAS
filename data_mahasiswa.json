@@ -11,13 +11,41 @@
         "nama": "Azka Insan",
         "email": "azka@example.com",
         "jurusan": "Sistem Informasi",
-        "ipk": 3.20
+        "ipk": 3.2
     },
     {
         "nim": "241011400097",
         "nama": "Zeryl",
         "email": "zeryz@example.com",
         "jurusan": "Teknik Elektro",
-        "ipk": 3.90
+        "ipk": 3.9
+    },
+    {
+        "nim": "241011400005",
+        "nama": "aaaaawh",
+        "email": "jefrizm30@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 0.0
+    },
+    {
+        "nim": "241011400004",
+        "nama": "aaa",
+        "email": "jefrizm30@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 0.0
+    },
+    {
+        "nim": "241011400003",
+        "nama": "asaa",
+        "email": "jefrizm30@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 0.0
+    },
+    {
+        "nim": "24101140006",
+        "nama": "aska",
+        "email": "awjmd@email.com",
+        "jurusan": "Informatika",
+        "ipk": 0.0
     }
 ]

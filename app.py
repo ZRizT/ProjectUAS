@@ -1,361 +1,164 @@
 import streamlit as st
-import json
-import re
 import time
-import os
-from abc import ABC, abstractmethod
+import pandas as pd
+from models import Student, StudentManager
+import utils
+import json
 
-# 1. KONSEP OOP (Encapsulation, Inheritance, Polymorphism)
-class Person(ABC):
-    def __init__(self, nama, email):
-        self.nama = nama
-        self.email = email
+# --- KONFIGURASI HALAMAN ---
+st.set_page_config(page_title="Sistem Akademik", page_icon="🎓", layout="centered")
 
-    @abstractmethod
-    def display_info(self):
-        pass
+# --- INITIALIZATION ---
+if 'manager' not in st.session_state:
+    st.session_state.manager = StudentManager()
 
-# Child Class: Student (Inheritance)
-class Student(Person):
-    def __init__(self, nim, nama, email, jurusan, ipk):
-        super().__init__(nama, email)
-        self.__nim = nim       # Encapsulation (Private attribute)
-        self.jurusan = jurusan
-        self.__ipk = ipk       # Encapsulation
+if 'is_logged_in' not in st.session_state:
+    st.session_state.is_logged_in = False
 
-    # Getter & Setter (Encapsulation)
-    def get_nim(self):
-        return self.__nim
+if 'user_role' not in st.session_state:
+    st.session_state.user_role = None
 
-    def get_ipk(self):
-        return self.__ipk
+manager = st.session_state.manager
 
-    def set_ipk(self, new_ipk):
-        if 0.0 <= new_ipk <= 4.0:
-            self.__ipk = new_ipk
-        else:
-            raise ValueError("IPK harus antara 0.0 dan 4.0")
+# --- FUNGSI HALAMAN LOGIN ---
+def login_page():
+    # URL Gambar Background Login (Ganti dengan file lokal atau URL kamu)
+    # Contoh pakai placeholder image
+    bg_login = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop"
+    utils.set_background(bg_login, is_login=True)
 
-    # Polymorphism: Implementasi method display_info
-    def display_info(self):
-        return {
-            "NIM": self.__nim,
-            "Nama": self.nama,
-            "Email": self.email,
-            "Jurusan": self.jurusan,
-            "IPK": self.__ipk
-        }
+    utils.render_logo() # Logo default
     
-    # Method untuk convert ke Dict (JSON)
-    def to_dict(self):
-        return {
-            "nim": self.__nim,
-            "nama": self.nama,
-            "email": self.email,
-            "jurusan": self.jurusan,
-            "ipk": self.__ipk
-        }
-
-# 2. MANAJEMEN DATA & FILE I/O
-class StudentManager:
-    def __init__(self, filename="data_mahasiswa.json"):
-        self.filename = filename
-        self.students = []
-        self.load_data()
-
-    # File I/O: Membaca data
-    def load_data(self):
-        if not os.path.exists(self.filename):
-            self.save_data() # Buat file jika belum ada
-        
-        try:
-            with open(self.filename, "r") as f:
-                data = json.load(f)
-                self.students = [Student(**item) for item in data]
-        except (json.JSONDecodeError, IOError):
-            self.students = []
-
-    # File I/O: Menyimpan data
-    def save_data(self):
-        try:
-            data = [s.to_dict() for s in self.students]
-            with open(self.filename, "w") as f:
-                json.dump(data, f, indent=4)
-        except Exception as e:
-            st.error(f"Gagal menyimpan data: {e}")
-
-    # CRUD: Create
-    def add_student(self, student):
-        # Cek duplikasi NIM
-        for s in self.students:
-            if s.get_nim() == student.get_nim():
-                raise ValueError("NIM sudah terdaftar!")
-        self.students.append(student)
-        self.save_data()
-
-    # CRUD: Delete
-    def delete_student(self, nim):
-        original_count = len(self.students)
-        self.students = [s for s in self.students if s.get_nim() != nim]
-        if len(self.students) == original_count:
-            raise ValueError("Mahasiswa tidak ditemukan.")
-        self.save_data()
-
-    # CRUD: Update (Edit IPK contohnya)
-    def update_ipk(self, nim, new_ipk):
-        for s in self.students:
-            if s.get_nim() == nim:
-                s.set_ipk(new_ipk)
-                self.save_data()
-                return True
-        raise ValueError("Mahasiswa tidak ditemukan.")
-
-    # Helper untuk mendapatkan list dict (untuk tampilan tabel)
-    def get_all_data(self):
-        return [s.to_dict() for s in self.students]
-
-# 3. ALGORITMA SEARCHING & SORTING
-
-class Algorithms:
+    st.markdown("<h1 style='text-align: center;'>Portal Akademik</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: gray;'>Silakan login untuk melanjutkan</p>", unsafe_allow_html=True)
     
-    # --- SEARCHING ---
-    
-    @staticmethod
-    def linear_search(data, key):
-        """Sequential Search: O(n)"""
-        results = []
-        for student in data:
-            if key.lower() in student.nama.lower():
-                results.append(student)
-        return results
-
-    @staticmethod
-    def binary_search_by_nim(data, target_nim):
-        """Binary Search: O(log n) - Data harus terurut berdasarkan NIM"""
-        # Sorting data sementara agar binary search bekerja
-        sorted_data = sorted(data, key=lambda x: x.get_nim())
-        
-        low = 0
-        high = len(sorted_data) - 1
-        
-        while low <= high:
-            mid = (low + high) // 2
-            mid_val = sorted_data[mid].get_nim()
+    with st.container():
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            role = st.selectbox("Masuk Sebagai", ["Admin / Dosen", "Mahasiswa"])
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
             
-            if mid_val == target_nim:
-                return [sorted_data[mid]]
-            elif mid_val < target_nim:
-                low = mid + 1
-            else:
-                high = mid - 1
-        return []
-
-    # --- SORTING ---
-
-    @staticmethod
-    def bubble_sort(data, key_attr, ascending=True):
-        """Bubble Sort: O(n^2)"""
-        arr = data.copy() # Copy agar tidak merusak data asli langsung
-        n = len(arr)
-        for i in range(n):
-            for j in range(0, n-i-1):
-                # Dinamis mengambil atribut (NIM, Nama, atau IPK)
-                val_a = getattr(arr[j], key_attr) if hasattr(arr[j], key_attr) else (arr[j].get_nim() if key_attr == 'nim' else arr[j].get_ipk())
-                val_b = getattr(arr[j+1], key_attr) if hasattr(arr[j+1], key_attr) else (arr[j+1].get_nim() if key_attr == 'nim' else arr[j+1].get_ipk())
-
-                if ascending:
-                    if val_a > val_b:
-                        arr[j], arr[j+1] = arr[j+1], arr[j]
-                else:
-                    if val_a < val_b:
-                        arr[j], arr[j+1] = arr[j+1], arr[j]
-        return arr
-
-    @staticmethod
-    def merge_sort(data, key_attr, ascending=True):
-        """Merge Sort: O(n log n)"""
-        if len(data) <= 1:
-            return data
-
-        mid = len(data) // 2
-        left = Algorithms.merge_sort(data[:mid], key_attr, ascending)
-        right = Algorithms.merge_sort(data[mid:], key_attr, ascending)
-
-        return Algorithms._merge(left, right, key_attr, ascending)
-
-    @staticmethod
-    def _merge(left, right, key_attr, ascending):
-        result = []
-        i = j = 0
-        
-        while i < len(left) and j < len(right):
-            val_a = getattr(left[i], key_attr) if hasattr(left[i], key_attr) else (left[i].get_nim() if key_attr == 'nim' else left[i].get_ipk())
-            val_b = getattr(right[j], key_attr) if hasattr(right[j], key_attr) else (right[j].get_nim() if key_attr == 'nim' else right[j].get_ipk())
-
-            condition = (val_a < val_b) if ascending else (val_a > val_b)
+            login_btn = st.button("Masuk", use_container_width=True)
             
-            if condition:
-                result.append(left[i])
-                i += 1
-            else:
-                result.append(right[j])
-                j += 1
+            if login_btn:
+                # Validasi Login Sederhana
+                if role == "Admin / Dosen":
+                    if username == "admin" and password == "admin123":
+                        st.session_state.is_logged_in = True
+                        st.session_state.user_role = "admin"
+                        st.success("Login Berhasil!")
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.error("Username atau Password salah!")
+                
+                elif role == "Mahasiswa":
+                    st.warning("⚠️ Fitur Login Mahasiswa sedang dalam perbaikan. Silakan hubungi Admin.")
+
+# --- FUNGSI HALAMAN DASHBOARD ---
+def dashboard_page():
+    # URL Gambar Background Dashboard (Ganti dengan assetmu)
+    bg_dash = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=50070&auto=format&fit=crop"
+    utils.set_background(bg_dash, is_login=False)
+
+    # Sidebar
+    with st.sidebar:
+        utils.render_logo(logo_path="https://img.icons8.com/color/48/university.png")
+        st.write(f"Selamat datang, **{st.session_state.user_role.capitalize()}**")
         
-        result.extend(left[i:])
-        result.extend(right[j:])
-        return result
-
-# 4. GUI & VALIDASI (STREAMLIT)
-
-def main():
-    st.set_page_config(page_title="Sistem Data Mahasiswa", page_icon="🎓")
-    
-    st.title("🎓 Manajemen Data Mahasiswa")
-    st.markdown("Created by Rizki Ramadani | 241011400098 | Algoritma & Pemrograman Project")
-
-    # Inisialisasi Manager
-    if 'manager' not in st.session_state:
-        st.session_state.manager = StudentManager()
-    
-    manager = st.session_state.manager
-
-    # Sidebar Menu
-    menu = st.sidebar.selectbox("Menu", ["Dashboard", "Tambah Mahasiswa", "Cari & Sortir", "Analisis Kompleksitas"])
-
-    # --- DASHBOARD (READ & DELETE) ---
-    if menu == "Dashboard":
-        st.subheader("Daftar Seluruh Mahasiswa")
+        menu = st.radio("Navigasi", ["Data Mahasiswa", "Input Data", "Kirim Email", "Analisis"])
         
+        st.divider()
+        if st.button("Logout"):
+            st.session_state.is_logged_in = False
+            st.rerun()
+
+    st.title(f"🎓 Menu {menu}")
+
+    # 1. VIEW DATA
+    if menu == "Data Mahasiswa":
         data = manager.get_all_data()
         if data:
-            st.dataframe(data, use_container_width=True)
+            df = pd.DataFrame(data)
+            st.dataframe(df, use_container_width=True)
             
-            # Delete Section
-            st.write("---")
-            st.warning("Hapus Data")
-            del_nim = st.text_input("Masukkan NIM untuk dihapus")
-            if st.button("Hapus Mahasiswa"):
-                try:
-                    manager.delete_student(del_nim)
-                    st.success(f"Mahasiswa dengan NIM {del_nim} berhasil dihapus!")
-                    time.sleep(1)
-                    st.rerun()
-                except ValueError as e:
-                    st.error(str(e))
+            # Fitur Delete
+            with st.expander("Hapus Data"):
+                del_nim = st.text_input("Masukkan NIM data yang ingin dihapus")
+                if st.button("Hapus"):
+                    try:
+                        manager.delete_student(del_nim)
+                        st.success("Data terhapus.")
+                        time.sleep(0.5); st.rerun()
+                    except ValueError as e: st.error(str(e))
         else:
-            st.info("Belum ada data mahasiswa. Silakan tambah data baru.")
+            st.info("Data kosong.")
 
-    # --- CREATE (TAMBAH DATA) ---
-    elif menu == "Tambah Mahasiswa":
-        st.subheader("Input Data Baru")
-        
-        with st.form("add_form"):
-            nim = st.text_input("NIM (Nomor Induk)")
-            nama = st.text_input("Nama Lengkap")
-            email = st.text_input("Email")
-            jurusan = st.selectbox("Jurusan", ["Informatika", "Sistem Informasi", "Teknik Mesin", "Teknik Elektro"])
-            ipk = st.number_input("IPK", min_value=0.0, max_value=4.0, step=0.01)
+    # 2. INPUT DATA
+    elif menu == "Input Data":
+        with st.form("input_form"):
+            col1, col2 = st.columns(2)
+            nim = col1.text_input("NIM")
+            nama = col2.text_input("Nama")
+            email = col1.text_input("Email")
+            jurusan = col2.selectbox("Jurusan", ["Informatika", "SI", "DKV"])
+            ipk = st.number_input("IPK", 0.0, 4.0, step=0.01)
             
-            submitted = st.form_submit_button("Simpan Data")
-            
-            if submitted:
-                # Validasi Input (Regex & Try-Catch)
+            if st.form_submit_button("Simpan"):
                 try:
-                    if not nim or not nama or not email:
-                        raise ValueError("Semua field wajib diisi!")
-                    
-                    # Regex Email Validation
-                    email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-                    if not re.match(email_pattern, email):
-                        raise ValueError("Format email tidak valid!")
-                    
-                    # Regex NIM (Contoh: hanya angka)
-                    if not re.match(r'^\d+$', nim):
-                        raise ValueError("NIM harus berupa angka!")
+                    new_s = Student(nim, nama, email, jurusan, ipk)
+                    manager.add_student(new_s)
+                    st.success("Data tersimpan!")
+                except Exception as e: st.error(str(e))
 
-                    new_student = Student(nim, nama, email, jurusan, ipk)
-                    manager.add_student(new_student)
-                    st.success("Data berhasil ditambahkan!")
-                    
-                except ValueError as e:
-                    st.error(f"Error Validasi: {e}")
-                except Exception as e:
-                    st.error(f"Terjadi kesalahan sistem: {e}")
-
-    # --- SEARCHING & SORTING ---
-    elif menu == "Cari & Sortir":
-        st.subheader("Pencarian & Pengurutan")
+    # 3. KIRIM EMAIL (FITUR BARU)
+    elif menu == "Kirim Email":
+        st.info("📨 Fitur Notifikasi Email")
         
-        tab1, tab2 = st.tabs(["🔍 Pencarian", "🔃 Pengurutan"])
+        tab1, tab2 = st.tabs(["Kirim ke Satu Mahasiswa", "Kirim Rekap Database"])
         
+        # Kirim IPK Personal
         with tab1:
-            search_method = st.radio("Metode Cari", ["Linear Search (By Nama)", "Binary Search (By NIM)"])
-            query = st.text_input("Masukkan Kata Kunci")
-            
-            if st.button("Cari"):
-                start_time = time.time()
-                
-                if search_method == "Linear Search (By Nama)":
-                    result = Algorithms.linear_search(manager.students, query)
+            target_nim = st.selectbox("Pilih Mahasiswa", [s['nim'] for s in manager.get_all_data()])
+            if st.button("Kirim Notifikasi IPK"):
+                # Cari data
+                mhs = next((s for s in manager.students if s.get_nim() == target_nim), None)
+                if mhs:
+                    subjek = f"Pemberitahuan IPK Semester - {mhs.nama}"
+                    isi = f"Halo {mhs.nama},\n\nBerikut adalah hasil studi Anda:\nNIM: {mhs.get_nim()}\nIPK: {mhs.get_ipk()}\n\nTetap semangat!\nAdmin Kampus."
+                    
+                    with st.spinner("Mengirim email..."):
+                        if utils.send_email_notification(mhs.email, subjek, isi):
+                            st.success(f"Email terkirim ke {mhs.email}")
                 else:
-                    result = Algorithms.binary_search_by_nim(manager.students, query)
-                
-                end_time = time.time()
-                
-                if result:
-                    st.write(f"Ditemukan {len(result)} data dalam {(end_time - start_time):.6f} detik.")
-                    st.dataframe([s.to_dict() for s in result])
-                else:
-                    st.warning("Data tidak ditemukan.")
+                    st.error("Mahasiswa tidak ditemukan.")
 
+        # Kirim Rekap ke Email Admin/Tujuan
         with tab2:
-            sort_algo = st.selectbox("Algoritma", ["Bubble Sort", "Merge Sort"])
-            sort_key = st.selectbox("Berdasarkan", ["IPK", "Nama"])
-            order = st.radio("Urutan", ["Ascending (A-Z / 0-4)", "Descending (Z-A / 4-0)"])
-            is_asc = True if order.startswith("Ascending") else False
-            
-            attr_map = {"IPK": "ipk", "Nama": "nama"} # Mapping ke atribut internal/getter
-            
-            if st.button("Urutkan Data"):
-                start_time = time.time()
+            target_email = st.text_input("Email Tujuan Rekap")
+            if st.button("Kirim Data Rekap"):
+                data_str = json.dumps(manager.get_all_data(), indent=4)
+                subjek = "Rekapitulasi Data Mahasiswa"
+                isi = f"Berikut adalah data rekap terbaru:\n\n{data_str}"
                 
-                # Menentukan atribut yang dipakai untuk sort
-                target_attr = "ipk" if sort_key == "IPK" else "nama" 
-                # Khusus IPK diakses lewat getter logic di algo, nama via atribut langsung
-                
-                if sort_algo == "Bubble Sort":
-                    sorted_list = Algorithms.bubble_sort(manager.students, target_attr, is_asc)
-                else:
-                    sorted_list = Algorithms.merge_sort(manager.students, target_attr, is_asc)
-                
-                end_time = time.time()
-                
-                st.write(f"Selesai diurutkan dalam {(end_time - start_time):.6f} detik.")
-                st.dataframe([s.to_dict() for s in sorted_list])
+                with st.spinner("Mengirim rekap..."):
+                    if utils.send_email_notification(target_email, subjek, isi):
+                        st.success("Rekap data berhasil dikirim.")
 
-    # --- ANALISIS KOMPLEKSITAS ---
-    elif menu == "Analisis Kompleksitas":
-        st.subheader("Estimasi Time Complexity")
+    # 4. ANALISIS (SORTING)
+    elif menu == "Analisis":
+        data = manager.students
+        algo = st.selectbox("Metode Sort", ["Bubble Sort"])
+        key = "ipk"
         
-        st.markdown("""
-        Berikut adalah analisis kompleksitas algoritma yang digunakan dalam aplikasi ini:
-        
-        ### 1. Searching
-        | Algoritma | Best Case | Average Case | Worst Case | Keterangan |
-        | :--- | :--- | :--- | :--- | :--- |
-        | **Linear Search** | $O(1)$ | $O(n)$ | $O(n)$ | Cek satu per satu, lambat untuk data besar. |
-        | **Binary Search** | $O(1)$ | $O(\log n)$ | $O(\log n)$ | Sangat cepat, tapi data **wajib urut** dulu. |
-        
-        ### 2. Sorting
-        | Algoritma | Best Case | Average Case | Worst Case | Keterangan |
-        | :--- | :--- | :--- | :--- | :--- |
-        | **Bubble Sort** | $O(n)$ | $O(n^2)$ | $O(n^2)$ | Mudah implementasi, performa buruk di data besar. |
-        | **Merge Sort** | $O(n \log n)$ | $O(n \log n)$ | $O(n \log n)$ | Stabil dan cepat (Divide & Conquer). |
-        
-        ### 3. Space Complexity
-        - Aplikasi ini menggunakan Array (List) untuk menyimpan objek `Student`.
-        - **Merge Sort** memakan memori tambahan $O(n)$ karena rekursi dan pembuatan list baru.
-        """)
+        if st.button("Urutkan Ranking IPK"):
+            sorted_data = utils.Algorithms.bubble_sort(data, key, ascending=False)
+            st.write("### Peringkat Mahasiswa (Tertinggi ke Terendah)")
+            st.table([s.to_dict() for s in sorted_data])
 
-if __name__ == "__main__":
-    main()
+# --- LOGIC SWITCHER ---
+if st.session_state.is_logged_in:
+    dashboard_page()
+else:
+    login_page()
