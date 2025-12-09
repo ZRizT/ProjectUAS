@@ -189,8 +189,10 @@ def send_email_notification(to_email, subject, body_html, body_plain=None):
     msg.attach(MIMEText(body_html, 'html'))
 
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
+#        server = smtplib.SMTP('smtp.gmail.com', 587)
+#        server.starttls()
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
         server.login(sender_email, sender_password)
         server.sendmail(sender_email, to_email, msg.as_string())
         server.quit()

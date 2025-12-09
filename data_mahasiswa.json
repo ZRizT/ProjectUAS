@@ -11,14 +11,14 @@
         "nama": "Azka Insan",
         "email": "azka.insan@example.com",
         "jurusan": "Sistem Informasi",
-        "ipk": 3.20
+        "ipk": 3.2
     },
     {
         "nim": "241011400097",
         "nama": "Zeryl Ardiansyah",
         "email": "zeryl.ardi@example.com",
         "jurusan": "Teknik Elektro",
-        "ipk": 3.90
+        "ipk": 3.9
     },
     {
         "nim": "241011400010",
@@ -39,7 +39,7 @@
         "nama": "Siti Aminah",
         "email": "siti.aminah@example.com",
         "jurusan": "Sistem Informasi",
-        "ipk": 3.40
+        "ipk": 3.4
     },
     {
         "nim": "241011400105",
@@ -67,7 +67,7 @@
         "nama": "Fajar Nugraha",
         "email": "fajar.nugraha@gmail.com",
         "jurusan": "Informatika",
-        "ipk": 3.50
+        "ipk": 3.5
     },
     {
         "nim": "241011400095",
@@ -88,7 +88,7 @@
         "nama": "Dian Sastrowardoyo",
         "email": "dian.sastro@example.com",
         "jurusan": "Sistem Informasi",
-        "ipk": 3.80
+        "ipk": 3.8
     },
     {
         "nim": "241011400100",
@@ -109,7 +109,7 @@
         "nama": "Indra Lesmana",
         "email": "indra.les@example.com",
         "jurusan": "Teknik Elektro",
-        "ipk": 3.10
+        "ipk": 3.1
     },
     {
         "nim": "241011400132",
@@ -137,6 +137,13 @@
         "nama": "Maya Wulandari",
         "email": "maya.wulan@example.com",
         "jurusan": "Sistem Informasi",
-        "ipk": 3.60
+        "ipk": 3.6
+    },
+    {
+        "nim": "241011400011",
+        "nama": "Test",
+        "email": "azka0087@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 4.0
     }
 ]
