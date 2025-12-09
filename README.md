@@ -65,6 +65,7 @@ Aplikasi ini dibangun berbasis **GUI Web** menggunakan **Streamlit**, dengan fit
 ---
 
 ## 🛠️ Struktur Proyek
+```text
 ProjectUAS/
 ├── main.py             # Frontend: GUI Streamlit & Navigasi
 ├── models.py           # Backend: OOP, Class Mahasiswa, File Manager
@@ -72,7 +73,7 @@ ProjectUAS/
 ├── requirements.txt    # Library yang digunakan
 ├── data_mahasiswa.json # Database lokal (JSON)
 └── assets/             # Gambar logo & background
-
+```
 
 ---
 
