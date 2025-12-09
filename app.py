@@ -29,7 +29,7 @@ def login_page():
 
     utils.render_logo() # Logo default
     
-    st.markdown("<h1 style='text-align: center;'>Portal Akademik</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Portal Akademik 'SMDM'</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: gray;'>Silakan login untuk melanjutkan</p>", unsafe_allow_html=True)
     
     with st.container():
