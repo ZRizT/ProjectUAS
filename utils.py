@@ -4,26 +4,90 @@ from email.mime.multipart import MIMEMultipart
 import streamlit as st
 
 # --- ALGORITMA SORTING & SEARCHING ---
-
 class Algorithms:
+    
+    # --- SEARCHING ---
     @staticmethod
     def linear_search(data, key):
-        return [s for s in data if key.lower() in s.nama.lower()]
+        """Sequential Search: O(n)"""
+        results = []
+        for student in data:
+            if key.lower() in student.nama.lower():
+                results.append(student)
+        return results
 
     @staticmethod
+    def binary_search_by_nim(data, target_nim):
+        """Binary Search: O(log n) - Data harus terurut berdasarkan NIM"""
+        sorted_data = sorted(data, key=lambda x: x.get_nim())
+        
+        low = 0
+        high = len(sorted_data) - 1
+        
+        while low <= high:
+            mid = (low + high) // 2
+            mid_val = sorted_data[mid].get_nim()
+            
+            if mid_val == target_nim:
+                return [sorted_data[mid]]
+            elif mid_val < target_nim:
+                low = mid + 1
+            else:
+                high = mid - 1
+        return []
+
+    # --- SORTING ---
+    @staticmethod
     def bubble_sort(data, key_attr, ascending=True):
-        arr = data.copy()
+        """Bubble Sort: O(n^2)"""
+        arr = data.copy() 
         n = len(arr)
         for i in range(n):
             for j in range(0, n-i-1):
                 val_a = getattr(arr[j], key_attr) if hasattr(arr[j], key_attr) else (arr[j].get_nim() if key_attr == 'nim' else arr[j].get_ipk())
                 val_b = getattr(arr[j+1], key_attr) if hasattr(arr[j+1], key_attr) else (arr[j+1].get_nim() if key_attr == 'nim' else arr[j+1].get_ipk())
-                
+
                 if ascending:
-                    if val_a > val_b: arr[j], arr[j+1] = arr[j+1], arr[j]
+                    if val_a > val_b:
+                        arr[j], arr[j+1] = arr[j+1], arr[j]
                 else:
-                    if val_a < val_b: arr[j], arr[j+1] = arr[j+1], arr[j]
+                    if val_a < val_b:
+                        arr[j], arr[j+1] = arr[j+1], arr[j]
         return arr
+
+    @staticmethod
+    def merge_sort(data, key_attr, ascending=True):
+        """Merge Sort: O(n log n)"""
+        if len(data) <= 1:
+            return data
+
+        mid = len(data) // 2
+        left = Algorithms.merge_sort(data[:mid], key_attr, ascending)
+        right = Algorithms.merge_sort(data[mid:], key_attr, ascending)
+
+        return Algorithms._merge(left, right, key_attr, ascending)
+
+    @staticmethod
+    def _merge(left, right, key_attr, ascending):
+        result = []
+        i = j = 0
+        
+        while i < len(left) and j < len(right):
+            val_a = getattr(left[i], key_attr) if hasattr(left[i], key_attr) else (left[i].get_nim() if key_attr == 'nim' else left[i].get_ipk())
+            val_b = getattr(right[j], key_attr) if hasattr(right[j], key_attr) else (right[j].get_nim() if key_attr == 'nim' else right[j].get_ipk())
+
+            condition = (val_a < val_b) if ascending else (val_a > val_b)
+            
+            if condition:
+                result.append(left[i])
+                i += 1
+            else:
+                result.append(right[j])
+                j += 1
+        
+        result.extend(left[i:])
+        result.extend(right[j:])
+        return result
 
 def template_ipk(mhs):
     return f"""
@@ -139,7 +203,7 @@ def send_email_notification(to_email, subject, body_html, body_plain=None):
 
 image_url = "https://i.imgur.com/hUT5YRQ.jpeg"
 def set_background(image_url, is_login=False):
-    opacity = "0.75" if is_login else "0.65"
+    opacity = "0.75" if is_login else "0.85"
     
     page_bg_img = f"""
     <style>

@@ -4,6 +4,7 @@ import pandas as pd
 from models import Student, StudentManager
 import utils
 import json
+import re
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Sistem Akademik", page_icon="🎓", layout="centered")
@@ -93,22 +94,41 @@ def dashboard_page():
         else:
             st.info("Data kosong.")
 
-    # 2. INPUT DATA
+    # 2. INPUT DATA REGEX VALIDATION
     elif menu == "Input Data":
         with st.form("input_form"):
             col1, col2 = st.columns(2)
             nim = col1.text_input("NIM")
             nama = col2.text_input("Nama")
             email = col1.text_input("Email")
-            jurusan = col2.selectbox("Jurusan", ["Informatika", "SI", "DKV"])
+            jurusan = col2.selectbox("Jurusan", ["Informatika", "SI", "Teknik Elektro", "Manajemen", "Akuntansi"])
             ipk = st.number_input("IPK", 0.0, 4.0, step=0.01)
             
             if st.form_submit_button("Simpan"):
                 try:
-                    new_s = Student(nim, nama, email, jurusan, ipk)
-                    manager.add_student(new_s)
-                    st.success("Data tersimpan!")
-                except Exception as e: st.error(str(e))
+                    if not nim or not nama or not email:
+                        raise ValueError("Semua field wajib diisi!")
+                                        
+                    # Regex NIM dan NAMA (Contoh: hanya angka/huruf)
+                    if not re.match(r'^[a-zA-Z]{3,50}$', nama):
+                        raise ValueError("Nama harus berupa minimal 3 huruf!")
+
+                    if not re.match(r'^\d{10,12}$', nim):
+                        raise ValueError("NIM harus terdiri dari 10-12 digit angka!")
+                    
+                    # Regex Email Validation
+                    email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+                    if not re.match(email_pattern, email):
+                        raise ValueError("Format email tidak valid!")                    
+                    
+                    new_student = Student(nim, nama, email, jurusan, ipk)
+                    manager.add_student(new_student)
+                    st.success("Data berhasil ditambahkan!")
+                    
+                except ValueError as e:
+                    st.error(f"Error Validasi: {e}")
+                except Exception as e:
+                    st.error(f"Terjadi kesalahan sistem: {e}")                
 
     # 3. KIRIM EMAIL
     elif menu == "Kirim Email":
@@ -146,15 +166,56 @@ def dashboard_page():
                         st.success("Rekap data berhasil dikirim.")
 
     # 4. ANALISIS (SORTING)
+    
     elif menu == "Analisis":
-        data = manager.students
-        algo = st.selectbox("Metode Sort", ["Bubble Sort"])
-        key = "ipk"
+        st.subheader("Pencarian & Pengurutan")
         
-        if st.button("Urutkan Ranking IPK"):
-            sorted_data = utils.Algorithms.bubble_sort(data, key, ascending=False)
-            st.write("### Peringkat Mahasiswa (Tertinggi ke Terendah)")
-            st.table([s.to_dict() for s in sorted_data])
+        tab1, tab2 = st.tabs(["🔍 Pencarian", "🔃 Pengurutan"])
+        
+        with tab1:
+            search_method = st.radio("Metode Cari", ["Linear Search (By Nama)", "Binary Search (By NIM)"])
+            query = st.text_input("Masukkan Kata Kunci")
+            
+            if st.button("Cari"):
+                start_time = time.time()
+                
+                if search_method == "Linear Search (By Nama)":
+                    result = utils.Algorithms.linear_search(manager.students, query)
+                else:
+                    result = utils.Algorithms.binary_search_by_nim(manager.students, query)
+                
+                end_time = time.time()
+                
+                if result:
+                    st.write(f"Ditemukan {len(result)} data dalam {(end_time - start_time):.6f} detik.")
+                    st.dataframe([s.to_dict() for s in result])
+                else:
+                    st.warning("Data tidak ditemukan.")
+
+        with tab2:
+            sort_algo = st.selectbox("Algoritma", ["Bubble Sort", "Merge Sort"])
+            sort_key = st.selectbox("Berdasarkan", ["IPK", "Nama"])
+            order = st.radio("Urutan", ["Ascending (A-Z / 0-4)", "Descending (Z-A / 4-0)"])
+            is_asc = True if order.startswith("Ascending") else False
+            
+            attr_map = {"IPK": "ipk", "Nama": "nama"} # Mapping ke atribut internal/getter
+            
+            if st.button("Urutkan Data"):
+                start_time = time.time()
+                
+                # Menentukan atribut yang dipakai untuk sort
+                target_attr = "ipk" if sort_key == "IPK" else "nama" 
+                # Khusus IPK diakses lewat getter logic di algo, nama via atribut langsung
+                
+                if sort_algo == "Bubble Sort":
+                    sorted_list = utils.Algorithms.bubble_sort(manager.students, target_attr, is_asc)
+                else:
+                    sorted_list = utils.Algorithms.merge_sort(manager.students, target_attr, is_asc)
+                
+                end_time = time.time()
+                
+                st.write(f"Selesai diurutkan dalam {(end_time - start_time):.6f} detik.")
+                st.dataframe([s.to_dict() for s in sorted_list])    
 
 # --- LOGIC SWITCHER ---
 if st.session_state.is_logged_in:

@@ -81,6 +81,15 @@ class StudentManager:
         if len(self.students) == original:
             raise ValueError("Data tidak ditemukan")
         self.save_data()
+        
+    # CRUD: Update (Edit IPK contohnya)
+    def update_ipk(self, nim, new_ipk):
+        for s in self.students:
+            if s.get_nim() == nim:
+                s.set_ipk(new_ipk)
+                self.save_data()
+                return True
+        raise ValueError("Mahasiswa tidak ditemukan.")
 
     def get_all_data(self):
         return [s.to_dict() for s in self.students]
