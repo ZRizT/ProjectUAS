@@ -102,9 +102,6 @@ email_password = "password-aplikasi-16-digit"
 streamlit run main.py
 ```
 
-## 📊 Analisis Kompleksitas
-
-
 ---
 
 ## 📊 Analisis Kompleksitas
