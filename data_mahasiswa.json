@@ -7,13 +7,6 @@
         "ipk": 3.85
     },
     {
-        "nim": "241011400099",
-        "nama": "Azka Insan",
-        "email": "azka.insan@example.com",
-        "jurusan": "Sistem Informasi",
-        "ipk": 3.2
-    },
-    {
         "nim": "241011400097",
         "nama": "Zeryl Ardiansyah",
         "email": "zeryl.ardi@example.com",
@@ -143,6 +136,13 @@
         "nim": "241011400011",
         "nama": "Test",
         "email": "azka0087@gmail.com",
+        "jurusan": "Informatika",
+        "ipk": 4.0
+    },
+    {
+        "nim": "241011400099",
+        "nama": "Azka",
+        "email": "akzaunpam@gmail.com",
         "jurusan": "Informatika",
         "ipk": 4.0
     }

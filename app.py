@@ -24,10 +24,10 @@ manager = st.session_state.manager
 # --- FUNGSI HALAMAN LOGIN ---
 def login_page():
     # URL Gambar Background Login
-    bg_login = "https://i.imgur.com/hUT5YRQ.jpeg"
+    bg_login = utils.load_asset_local_or_online("assets/bg_login.jpg", "https://i.imgur.com/hUT5YRQ.jpeg")
     utils.set_background(bg_login, is_login=True)
 
-    utils.render_logo() # Logo default
+    utils.render_logo(logo_path= utils.load_asset_local_or_online("assets/logo.png", "https://i.imgur.com/WJulW4w.png")) # Logo default
     
     st.markdown("<h1 style='text-align: center;'>Portal Akademik 'SMDM'</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: gray;'>Silakan login untuk melanjutkan</p>", unsafe_allow_html=True)
@@ -66,7 +66,7 @@ def dashboard_page():
         utils.render_logo(logo_path="https://i.imgur.com/WJulW4w.png")
         st.write(f"Selamat datang, **{st.session_state.user_role.capitalize()}**")
         
-        menu = st.radio("Navigasi", ["Data Mahasiswa", "Input Data", "Kirim Email", "Analisis"])
+        menu = st.radio("Navigasi", ["Dashboard", "Data Mahasiswa", "Input Data", "Kirim Email", "Analisis"])
         
         st.divider()
         if st.button("Logout"):
@@ -74,6 +74,29 @@ def dashboard_page():
             st.rerun()
 
     st.title(f"🎓 Menu {menu}")
+
+    #dashboard overview
+    if menu == "Dashboard":
+        data = manager.get_all_data()
+
+        if not data:
+            st.info("Belum ada data mahasiswa.")
+        else:
+            df = pd.DataFrame(data)
+
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Jumlah Mahasiswa", len(df))
+            col2.metric("Rata-rata IPK", f"{df['ipk'].mean():.2f}")
+            
+            # Jurusan terbanyak
+            top_major = df["jurusan"].value_counts().idxmax()
+            col3.metric("Jurusan Terbesar", top_major)
+
+            st.subheader("Distribusi Mahasiswa Berdasarkan Jurusan")
+            st.bar_chart(df["jurusan"].value_counts())
+
+            st.subheader("Statistik IPK")
+            st.line_chart(df["ipk"])
 
     # 1. VIEW DATA
     if menu == "Data Mahasiswa":
@@ -156,14 +179,29 @@ def dashboard_page():
         # Kirim Rekap ke Email Admin/Tujuan
         with tab2:
             target_email = st.text_input("Email Tujuan Rekap")
-            if st.button("Kirim Data Rekap"):
-                data_str = json.dumps(manager.get_all_data(), indent=4)
-                subjek = "Rekapitulasi Data Mahasiswa"
-                isi = f"Berikut adalah data rekap terbaru:\n\n{data_str}"
-                
-                with st.spinner("Mengirim rekap..."):
-                    if utils.send_email_notification(target_email, subjek, isi):
-                        st.success("Rekap data berhasil dikirim.")
+        if st.button("Kirim Data Rekap"):
+            df = pd.DataFrame(manager.get_all_data())
+            
+            # EXPORT
+            df.to_excel("rekap.xlsx", index=False)
+            df.to_csv("rekap.csv", index=False)
+
+            html_table = df.to_html(index=False)
+            subjek = f"Rekap Data Mahasiswa - Sistem Akademik"
+            
+            body_html = f"""
+            <h2>Rekap Data Mahasiswa</h2>
+            <p>Berikut rekap terbaru:</p>
+            {html_table}
+            """
+
+            attachments = [
+                ("rekap.xlsx", "rekap.xlsx"),
+                ("rekap.csv", "rekap.csv")
+            ]
+            with st.spinner("Mengirim rekap..."):
+                if utils.send_email_notification(target_email, subjek, body_html, attachments=attachments):
+                    st.success("Rekap data berhasil dikirim.")
 
     # 4. ANALISIS (SORTING)
     

@@ -1,7 +1,10 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders      
 import streamlit as st
+import os
 
 # --- ALGORITMA SORTING & SEARCHING ---
 class Algorithms:
@@ -167,7 +170,7 @@ def template_ipk(mhs):
 
 # --- EMAIL SENDER (SMTP) ---
 
-def send_email_notification(to_email, subject, body_html, body_plain=None):
+def send_email_notification(to_email, subject, body_html, body_plain=None, attachments=None):
     if 'email_user' not in st.secrets or 'email_password' not in st.secrets:
         st.warning("⚠️ Fitur email dalam Mode Simulasi (Credentials belum diset). Email tidak benar-benar terkirim.")
         print(f"SIMULASI KIRIM KE: {to_email}\nISI HTML:\n{body_html}")
@@ -185,8 +188,20 @@ def send_email_notification(to_email, subject, body_html, body_plain=None):
     if body_plain is None:
         body_plain = "Anda menerima notifikasi akademik. Silakan buka email menggunakan aplikasi yang mendukung HTML."
 
-    msg.attach(MIMEText(body_plain, 'plain'))
+    if body_plain:
+        msg.attach(MIMEText(body_plain, 'plain'))
+
     msg.attach(MIMEText(body_html, 'html'))
+    
+    if attachments:
+        for file_path, file_name in attachments:
+            with open(file_path, "rb") as f:
+                mime_file = MIMEBase("application", "octet-stream")
+                mime_file.set_payload(f.read())
+            
+            encoders.encode_base64(mime_file)
+            mime_file.add_header("Content-Disposition", f"attachment; filename={file_name}")
+            msg.attach(mime_file)
 
     try:
 #        server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -202,6 +217,10 @@ def send_email_notification(to_email, subject, body_html, body_plain=None):
         return False
 
 # --- CUSTOM CSS (BACKGROUND & LOGO) ---
+def load_asset_local_or_online(local_path, online_url):
+    if os.path.exists(local_path):
+        return local_path
+    return online_url
 
 image_url = "https://i.imgur.com/hUT5YRQ.jpeg"
 def set_background(image_url, is_login=False):
