@@ -5,6 +5,8 @@ from email.mime.base import MIMEBase
 from email import encoders      
 import streamlit as st
 import os
+import base64
+
 
 # --- ALGORITMA SORTING & SEARCHING ---
 class Algorithms:
@@ -217,12 +219,26 @@ def send_email_notification(to_email, subject, body_html, body_plain=None, attac
         return False
 
 # --- CUSTOM CSS (BACKGROUND & LOGO) ---
+def get_img_as_base64(file_path):
+    with open(file_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
 def load_asset_local_or_online(local_path, online_url):
     if os.path.exists(local_path):
-        return local_path
+        try:
+            ext = local_path.split('.')[-1]
+            base64_str = get_img_as_base64(local_path)
+            return f"data:image/{ext};base64,{base64_str}"
+        except Exception as e:
+            st.error(f"Gagal memuat gambar lokal: {e}")
+            return online_url
     return online_url
 
-image_url = "https://i.imgur.com/hUT5YRQ.jpeg"
+logo_path = load_asset_local_or_online("assets/logo.png", "https://i.imgur.com/WJulW4w.png")
+bg_login = load_asset_local_or_online("assets/bg_login.jpg", "https://i.imgur.com/hUT5YRQ.jpeg")
+bg_dash = load_asset_local_or_online("assets/bg_dash.jpg", "https://biaya.info/wp-content/uploads/2023/03/2022-03-12.jpg")
+
 def set_background(image_url, is_login=False):
     opacity = "0.75" if is_login else "0.85"
     
@@ -242,12 +258,12 @@ def set_background(image_url, is_login=False):
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-def render_logo(logo_path="https://i.imgur.com/WJulW4w.png"):
+def render_logo(logo_path_input):
     """Menampilkan logo di tengah (login) dan sidebar"""
     st.markdown(
         f"""
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-            <img src="{logo_path}" width="120">
+            <img src="{logo_path_input}" width="120">
         </div>
         """,
         unsafe_allow_html=True

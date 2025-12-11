@@ -5,6 +5,32 @@ from models import Student, StudentManager
 import utils
 import json
 import re
+import plotly.express as px
+
+# PLOTLY CUSTOM TEMPLATE
+clean_template = {
+    "layout": {
+        "paper_bgcolor": "rgba(0,0,0,0)",
+        "plot_bgcolor": "rgba(0,0,0,0)",
+        "font": {"family": "Inter, sans-serif", "size": 14, "color": "#333"},
+        "xaxis": {"gridcolor": "rgba(0,0,0,0.1)"},
+        "yaxis": {"gridcolor": "rgba(0,0,0,0.08)"},
+    }
+}
+st.markdown("""
+<style>
+    .plot-container {
+        border-radius: 18px;
+        background: rgba(255,255,255,0.6);
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Sistem Akademik", page_icon="🎓", layout="centered")
@@ -23,11 +49,9 @@ manager = st.session_state.manager
 
 # --- FUNGSI HALAMAN LOGIN ---
 def login_page():
-    # URL Gambar Background Login
-    bg_login = utils.load_asset_local_or_online("assets/bg_login.jpg", "https://i.imgur.com/hUT5YRQ.jpeg")
-    utils.set_background(bg_login, is_login=True)
+    utils.set_background(utils.bg_login, is_login=True)
 
-    utils.render_logo(logo_path= utils.load_asset_local_or_online("assets/logo.png", "https://i.imgur.com/WJulW4w.png")) # Logo default
+    utils.render_logo(utils.logo_path) # Logo default
     
     st.markdown("<h1 style='text-align: center;'>Portal Akademik 'SMDM'</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: gray;'>Silakan login untuk melanjutkan</p>", unsafe_allow_html=True)
@@ -58,12 +82,12 @@ def login_page():
 
 # --- FUNGSI HALAMAN DASHBOARD ---
 def dashboard_page():
-    bg_dash = "https://i.imgur.com/hUT5YRQ.jpeg"
+    bg_dash = utils.load_asset_local_or_online("assets/bg_dash.jpg", "https://biaya.info/wp-content/uploads/2023/03/2022-03-12.jpg")
     utils.set_background(bg_dash, is_login=False)
 
     # Sidebar
     with st.sidebar:
-        utils.render_logo(logo_path="https://i.imgur.com/WJulW4w.png")
+        utils.render_logo(utils.logo_path)  # Logo sidebar
         st.write(f"Selamat datang, **{st.session_state.user_role.capitalize()}**")
         
         menu = st.radio("Navigasi", ["Dashboard", "Data Mahasiswa", "Input Data", "Kirim Email", "Analisis"])
@@ -92,11 +116,54 @@ def dashboard_page():
             top_major = df["jurusan"].value_counts().idxmax()
             col3.metric("Jurusan Terbesar", top_major)
 
+            # Distribusi Jurusan (Bar Chart)
             st.subheader("Distribusi Mahasiswa Berdasarkan Jurusan")
-            st.bar_chart(df["jurusan"].value_counts())
+            jurusan_count = df["jurusan"].value_counts().reset_index()
+            jurusan_count.columns = ["jurusan", "jumlah"]
+            
+            fig_bar = px.bar(
+                jurusan_count,
+                x="jurusan",
+                y="jumlah",
+                text="jumlah",
+                template="simple_white",)
+
+            fig_bar.update_traces(
+                marker_color="#4A90E2",
+                textposition="outside")
+
+            fig_bar.update_layout(
+                title=None,
+                margin=dict(l=10, r=10, t=10, b=10),
+                yaxis_title="jumlah",
+                xaxis_title="",
+                plot_bgcolor="rgba(0,0,0,0)",
+                paper_bgcolor="rgba(0,0,0,0)",)
+            st.plotly_chart(fig_bar, use_container_width=True)
 
             st.subheader("Statistik IPK")
-            st.line_chart(df["ipk"])
+            df_ipk = df.reset_index()
+            df_ipk["Mahasiswa Ke"] = df_ipk.index + 1
+
+            fig_line = px.line(
+                df_ipk,
+                x="Mahasiswa Ke",
+                y="ipk",
+                markers=True,
+                template="simple_white")
+
+            fig_line.update_traces(
+                line=dict(width=3, color="#7E57C2"),
+                marker=dict(size=7))
+
+            fig_line.update_layout(
+                margin=dict(l=10, r=10, t=10, b=10),
+                yaxis_title="IPK",
+                xaxis_title="",
+                plot_bgcolor="rgba(0,0,0,0)",
+                paper_bgcolor="rgba(0,0,0,0)",)
+            st.plotly_chart(fig_line, use_container_width=True)
+
 
     # 1. VIEW DATA
     if menu == "Data Mahasiswa":
@@ -179,29 +246,29 @@ def dashboard_page():
         # Kirim Rekap ke Email Admin/Tujuan
         with tab2:
             target_email = st.text_input("Email Tujuan Rekap")
-        if st.button("Kirim Data Rekap"):
-            df = pd.DataFrame(manager.get_all_data())
-            
-            # EXPORT
-            df.to_excel("rekap.xlsx", index=False)
-            df.to_csv("rekap.csv", index=False)
+            if st.button("Kirim Data Rekap"):
+                df = pd.DataFrame(manager.get_all_data())
+                
+                # EXPORT
+                df.to_excel("rekap.xlsx", index=False)
+                df.to_csv("rekap.csv", index=False)
 
-            html_table = df.to_html(index=False)
-            subjek = f"Rekap Data Mahasiswa - Sistem Akademik"
-            
-            body_html = f"""
-            <h2>Rekap Data Mahasiswa</h2>
-            <p>Berikut rekap terbaru:</p>
-            {html_table}
-            """
+                html_table = df.to_html(index=False)
+                subjek = f"Rekap Data Mahasiswa - Sistem Akademik"
+                
+                body_html = f"""
+                <h2>Rekap Data Mahasiswa</h2>
+                <p>Berikut rekap terbaru:</p>
+                {html_table}
+                """
 
-            attachments = [
-                ("rekap.xlsx", "rekap.xlsx"),
-                ("rekap.csv", "rekap.csv")
-            ]
-            with st.spinner("Mengirim rekap..."):
-                if utils.send_email_notification(target_email, subjek, body_html, attachments=attachments):
-                    st.success("Rekap data berhasil dikirim.")
+                attachments = [
+                    ("rekap.xlsx", "rekap.xlsx"),
+                    ("rekap.csv", "rekap.csv")
+                ]
+                with st.spinner("Mengirim rekap..."):
+                    if utils.send_email_notification(target_email, subjek, body_html, attachments=attachments):
+                        st.success("Rekap data berhasil dikirim.")
 
     # 4. ANALISIS (SORTING)
     
