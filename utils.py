@@ -240,7 +240,7 @@ bg_login = load_asset_local_or_online("assets/bg_login.jpg", "https://i.imgur.co
 bg_dash = load_asset_local_or_online("assets/bg_dash.jpg", "https://biaya.info/wp-content/uploads/2023/03/2022-03-12.jpg")
 
 def set_background(image_url, is_login=False):
-    opacity = "0.75" if is_login else "0.85"
+    opacity = "0.55" if is_login else "0.65"
     
     page_bg_img = f"""
     <style>
