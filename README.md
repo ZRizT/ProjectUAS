@@ -1,5 +1,9 @@
 # 🎓 Sistem Manajemen Data Mahasiswa (SMDM)
 Kunjungi [SMDM](https://projectuas-ap2-0098.streamlit.app) untuk mengakses aplikasi ini.
+```login
+admin
+admin123
+```
 
 ---
 
@@ -64,7 +68,7 @@ Aplikasi ini dibangun berbasis **GUI Web** menggunakan **Streamlit**, dengan fit
 ### **4. Fitur Lanjutan (Email Automation)**
 
 📩 **Notifikasi Nilai** → Mengirim email personal berisi IPK  
-📂 **Rekap Data** → Mengirim backup database JSON ke admin  
+📂 **Rekap Data** → Mengirim backup database Sheet/CSV ke admin/email tujuan  
 
 ---
 
@@ -127,6 +131,8 @@ streamlit run main.py
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9c0994a7-813c-4009-8e23-381ecc89c071" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9d517131-9e1b-4523-8263-e4cff4369676" />
 <img width="445" height="641" alt="image" src="https://github.com/user-attachments/assets/72e6e130-9a0a-4e09-adea-1adc033f772a" />
+<img width="509" height="739" alt="image" src="https://github.com/user-attachments/assets/d83432b0-3b34-4598-9105-3b6370c2b1f9" />
+
 
 ---
 
