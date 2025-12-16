@@ -108,7 +108,7 @@ email_password = "password-aplikasi-16-digit"
 
 ### **4. Jalankan Aplikasi**
 ```bash
-streamlit run main.py
+streamlit run main.py --server.headless=true 
 ```
 
 ---
