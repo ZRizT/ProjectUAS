@@ -1,5 +1,7 @@
 # 🎓 Sistem Manajemen Data Mahasiswa (SMDM)
 Kunjungi [SMDM](https://projectuas-ap2-0098.streamlit.app) untuk mengakses aplikasi ini.
+GitHub: [ZRizT/ProjectUAS](https://github.com/ZRizT/ProjectUAS)
+
 ```login
 admin
 admin123
@@ -108,7 +110,7 @@ email_password = "password-aplikasi-16-digit"
 
 ### **4. Jalankan Aplikasi**
 ```bash
-streamlit run main.py --server.headless=true 
+streamlit run main.py --server.headless true 
 ```
 
 ---
