@@ -35,6 +35,7 @@ st.markdown("""
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Sistem Akademik", page_icon="🎓", layout="centered")
 
+
 # --- INITIALIZATION ---
 if 'manager' not in st.session_state:
     st.session_state.manager = StudentManager()
@@ -96,7 +97,14 @@ def dashboard_page():
         if st.button("Logout"):
             st.session_state.is_logged_in = False
             st.rerun()
-
+        st.markdown("""
+        <div style="display:flex; align-items:center; gap:8px;">
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="18">
+            <a href="https://github.com/ZRizT/ProjectUAS" target="_blank">GitHub</a>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    
     st.title(f"🎓 Menu {menu}")
 
     #dashboard overview
@@ -320,7 +328,9 @@ def dashboard_page():
                 end_time = time.time()
                 
                 st.write(f"Selesai diurutkan dalam {(end_time - start_time):.6f} detik.")
-                st.dataframe([s.to_dict() for s in sorted_list])    
+                st.dataframe([s.to_dict() for s in sorted_list]) 
+                
+   
 
 # --- LOGIC SWITCHER ---
 if st.session_state.is_logged_in:
